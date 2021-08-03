@@ -33,6 +33,7 @@
 #import "SAAutoTrackManager.h"
 #import "SAWeakPropertyContainer.h"
 #import <objc/runtime.h>
+#import "SAAppViewScreenDurationTracker.h"
 
 static void *const kSAPreviousViewController = (void *)&kSAPreviousViewController;
 
@@ -79,6 +80,9 @@ static void *const kSAPreviousViewController = (void *)&kSAPreviousViewControlle
             return [self sa_autotrack_viewDidAppear:animated];
         }
     }
+    
+    SAAppViewScreenDurationTracker *appViewScreenDurationTracker = [SAAppViewScreenDurationTracker new];
+    [self setAppViewScreenDurationTracker:appViewScreenDurationTracker];
 
 #ifndef SENSORS_ANALYTICS_ENABLE_AUTOTRACK_CHILD_VIEWSCREEN
     UIViewController *viewController = (UIViewController *)self;
@@ -88,9 +92,11 @@ static void *const kSAPreviousViewController = (void *)&kSAPreviousViewControlle
         [viewController.parentViewController isKindOfClass:[UIPageViewController class]] ||
         [viewController.parentViewController isKindOfClass:[UISplitViewController class]]) {
         [appViewScreenTracker autoTrackEventWithViewController:viewController];
+        [appViewScreenDurationTracker trackTimerStartForAppViewScreenDuration];
     }
 #else
     [appViewScreenTracker autoTrackEventWithViewController:self];
+    [appViewScreenDurationTracker trackTimerStartForAppViewScreenDuration];
 #endif
 
     // 标记 previousViewController
@@ -99,6 +105,53 @@ static void *const kSAPreviousViewController = (void *)&kSAPreviousViewControlle
     }
 
     [self sa_autotrack_viewDidAppear:animated];
+}
+
+- (void)sa_autotrack_viewDidDisappear:(BOOL)animated {
+    
+    // 防止 tabbar 切换，可能漏采 $AppViewScreen 全埋点
+    if ([self isKindOfClass:UINavigationController.class]) {
+        UINavigationController *nav = (UINavigationController *)self;
+        nav.sensorsdata_previousViewController = nil;
+    }
+
+    // parentViewController 判断，防止开启子页面采集时候的侧滑多采集父页面 $AppViewScreen 事件
+    if (self.navigationController && self.parentViewController == self.navigationController) {
+        // 全埋点中，忽略由于侧滑部分返回原页面，重复触发 $AppViewScreen 事件
+        if (self.navigationController.sensorsdata_previousViewController == self) {
+            return [self sa_autotrack_viewDidDisappear:animated];
+        }
+    }
+    
+    SAAppViewScreenDurationTracker *appViewScreenDurationTracker = [self appViewScreenDurationTracker];
+
+#ifndef SENSORS_ANALYTICS_ENABLE_AUTOTRACK_CHILD_VIEWSCREEN
+    UIViewController *viewController = (UIViewController *)self;
+    if (!viewController.parentViewController ||
+        [viewController.parentViewController isKindOfClass:[UITabBarController class]] ||
+        [viewController.parentViewController isKindOfClass:[UINavigationController class]] ||
+        [viewController.parentViewController isKindOfClass:[UIPageViewController class]] ||
+        [viewController.parentViewController isKindOfClass:[UISplitViewController class]]) {
+        [appViewScreenDurationTracker autoTrackEventWithViewController:viewController];
+    }
+#else
+    [appViewScreenDurationTracker autoTrackEventWithViewController:viewController];
+#endif
+
+    [self sa_autotrack_viewDidDisappear:animated];
+
+}
+
+#pragma mark - Private
+
+const void *appViewScreenDurationTrackerKey = &appViewScreenDurationTrackerKey;
+
+- (void)setAppViewScreenDurationTracker:(SAAppViewScreenDurationTracker *)tracker {
+    objc_setAssociatedObject(self, appViewScreenDurationTrackerKey, tracker, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (SAAppViewScreenDurationTracker *)appViewScreenDurationTracker {
+    return objc_getAssociatedObject(self, appViewScreenDurationTrackerKey);
 }
 
 @end

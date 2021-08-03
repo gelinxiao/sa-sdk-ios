@@ -134,6 +134,8 @@
 		4DD1296A25F8E451008C0B1E /* SAViewNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DD1296125F8E451008C0B1E /* SAViewNode.h */; };
 		4DD1296B25F8E451008C0B1E /* SAViewNodeFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DD1296225F8E451008C0B1E /* SAViewNodeFactory.h */; };
 		4DD1296D25F8E451008C0B1E /* SAViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD1296425F8E451008C0B1E /* SAViewNode.m */; };
+		5C9DC6D526B7F9020015F431 /* SAAppViewScreenDurationTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C9DC6D326B7F9020015F431 /* SAAppViewScreenDurationTracker.h */; };
+		5C9DC6D626B7F9020015F431 /* SAAppViewScreenDurationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9DC6D426B7F9020015F431 /* SAAppViewScreenDurationTracker.m */; };
 		880F37DA24AC34A4005AC8A0 /* SAEventStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 880F37D924AC34A4005AC8A0 /* SAEventStoreTests.m */; };
 		881A4180253D7B4F00854F69 /* SASecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 881A40D3253D7B4F00854F69 /* SASecurityPolicy.m */; };
 		881A4181253D7B4F00854F69 /* NSString+HashCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 881A40D4253D7B4F00854F69 /* NSString+HashCode.m */; };
@@ -448,6 +450,8 @@
 		4DD1296125F8E451008C0B1E /* SAViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAViewNode.h; sourceTree = "<group>"; };
 		4DD1296225F8E451008C0B1E /* SAViewNodeFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAViewNodeFactory.h; sourceTree = "<group>"; };
 		4DD1296425F8E451008C0B1E /* SAViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAViewNode.m; sourceTree = "<group>"; };
+		5C9DC6D326B7F9020015F431 /* SAAppViewScreenDurationTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SAAppViewScreenDurationTracker.h; sourceTree = "<group>"; };
+		5C9DC6D426B7F9020015F431 /* SAAppViewScreenDurationTracker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SAAppViewScreenDurationTracker.m; sourceTree = "<group>"; };
 		880F37D924AC34A4005AC8A0 /* SAEventStoreTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SAEventStoreTests.m; sourceTree = "<group>"; };
 		881A40D3253D7B4F00854F69 /* SASecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SASecurityPolicy.m; sourceTree = "<group>"; };
 		881A40D4253D7B4F00854F69 /* NSString+HashCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HashCode.m"; sourceTree = "<group>"; };
@@ -1139,6 +1143,8 @@
 				A8356D8B2656459A00FD64AA /* UIViewController+AutoTrack.m */,
 				A8356DB92656459A00FD64AA /* SAAppViewScreenTracker.h */,
 				A8356DBA2656459A00FD64AA /* SAAppViewScreenTracker.m */,
+				5C9DC6D326B7F9020015F431 /* SAAppViewScreenDurationTracker.h */,
+				5C9DC6D426B7F9020015F431 /* SAAppViewScreenDurationTracker.m */,
 			);
 			path = AppViewScreen;
 			sourceTree = "<group>";
@@ -1295,6 +1301,7 @@
 				4DD1285525F872A4008C0B1E /* SAObjectIdentityProvider.h in Headers */,
 				A8356DD62656459A00FD64AA /* UIGestureRecognizer+SAAutoTrack.h in Headers */,
 				4DD1285F25F872A4008C0B1E /* SAVisualizedSnapshotMessage.h in Headers */,
+				5C9DC6D526B7F9020015F431 /* SAAppViewScreenDurationTracker.h in Headers */,
 				4D4DB2C825B7D19C00938842 /* SADelegateProxy.h in Headers */,
 				4D2D53A12591EB2100805141 /* SAEventFlush.h in Headers */,
 				FCD8386D2646A40900559F5E /* SAECCPluginEncryptor.h in Headers */,
@@ -1601,6 +1608,7 @@
 				F277F5C125CF9A43009B5CE6 /* SANotificationUtil.m in Sources */,
 				4DA89BC125C2BC1E003ABA43 /* SANetwork.m in Sources */,
 				A8356DDC2656459A00FD64AA /* UIView+AutoTrack.m in Sources */,
+				5C9DC6D626B7F9020015F431 /* SAAppViewScreenDurationTracker.m in Sources */,
 				FCD838732646A40900559F5E /* SAAESEncryptor.m in Sources */,
 				4DD128C425F8A003008C0B1E /* SAVisualPropertiesConfigSources.m in Sources */,
 				FCD838782646A40900559F5E /* SAECCPluginEncryptor.m in Sources */,

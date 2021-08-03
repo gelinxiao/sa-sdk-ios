@@ -52,6 +52,9 @@ extern NSString * const kSAEventNameAppStart;
 extern NSString * const kSAEventNameAppEnd;
 // App 浏览页面
 extern NSString * const kSAEventNameAppViewScreen;
+// App 浏览页面持续时间
+extern NSString * const kSAEventNameAppViewScreenDuration;
+
 // App 元素点击
 extern NSString * const kSAEventNameAppClick;
 // 自动追踪相关事件及属性

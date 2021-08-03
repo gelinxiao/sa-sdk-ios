@@ -257,6 +257,9 @@
     [UIViewController sa_swizzleMethod:@selector(viewDidAppear:)
                             withMethod:@selector(sa_autotrack_viewDidAppear:)
                                  error:NULL];
+    [UIViewController sa_swizzleMethod:@selector(viewDidDisappear:)
+                            withMethod:@selector(sa_autotrack_viewDidDisappear:)
+                                 error:NULL];
 }
 
 - (void)enableAppClickAutoTrack {
