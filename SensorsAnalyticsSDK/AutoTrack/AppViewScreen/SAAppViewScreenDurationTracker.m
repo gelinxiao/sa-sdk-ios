@@ -61,7 +61,7 @@
 #pragma mark - Public Methods
 
 - (void)trackTimerStartForAppViewScreenDuration {
-    self.timerEventID = [SensorsAnalyticsSDK.sdkInstance trackTimerStart:kSAEventNameAppEnd];
+    self.timerEventID = [SensorsAnalyticsSDK.sdkInstance trackTimerStart:kSAEventNameAppViewScreenDuration];
 }
 
 @end
