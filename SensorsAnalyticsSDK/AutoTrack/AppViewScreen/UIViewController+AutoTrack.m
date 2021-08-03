@@ -61,6 +61,12 @@ static void *const kSAPreviousViewController = (void *)&kSAPreviousViewControlle
     if (controllerTitle.length > 0) {
         return controllerTitle;
     }
+    
+    UILabel *titleLabel = [self valueForKey:@"jw_leftTitleLabel"];
+    if (titleLabel.text.length > 0) {
+        return titleLabel.text;
+    }
+
     return nil;
 }
 
