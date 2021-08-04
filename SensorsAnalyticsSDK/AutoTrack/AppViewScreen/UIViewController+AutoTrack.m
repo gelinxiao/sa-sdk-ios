@@ -160,6 +160,10 @@ const void *appViewScreenDurationTrackerKey = &appViewScreenDurationTrackerKey;
     return objc_getAssociatedObject(self, appViewScreenDurationTrackerKey);
 }
 
+- (nullable id)valueForUndefinedKey:(NSString *)key {
+    return nil;
+}
+
 @end
 
 @implementation UINavigationController (AutoTrack)
