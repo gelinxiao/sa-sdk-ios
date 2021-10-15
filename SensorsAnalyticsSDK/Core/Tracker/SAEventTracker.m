@@ -99,10 +99,10 @@ static NSInteger kSAFlushMaxRepeatCount = 100;
     return YES;
 }
 
+/// 筛选加密数据，并对未加密的数据尝试加密
+/// 即使未开启加密，也可以进行筛选，可能存在加密开关的情况
+/// @param records 数据
 - (NSArray<SAEventRecord *> *)encryptEventRecords:(NSArray<SAEventRecord *> *)records {
-    if (!SAModuleManager.sharedInstance.encryptManager) {
-        return records;
-    }
     NSMutableArray *encryptRecords = [NSMutableArray arrayWithCapacity:records.count];
     for (SAEventRecord *record in records) {
         if (record.isEncrypted) {
@@ -120,24 +120,37 @@ static NSInteger kSAFlushMaxRepeatCount = 100;
 }
 
 - (void)flushAllEventRecords {
-    if (![self canFlush]) {
-        return;
-    }
-    [self flushRecordsWithSize:self.isDebugMode ? 1 : 50 repeatCount:kSAFlushMaxRepeatCount];
+    [self flushAllEventRecordsWithCompletion:nil];
 }
 
-- (void)flushRecordsWithSize:(NSUInteger)size repeatCount:(NSInteger)repeatCount {
+- (void)flushAllEventRecordsWithCompletion:(void(^)(void))completion {
+    if (![self canFlush]) {
+        if (completion) {
+            completion();
+        }
+        return;
+    }
+    [self flushRecordsWithSize:self.isDebugMode ? 1 : 50 repeatCount:kSAFlushMaxRepeatCount completion:completion];
+}
+
+- (void)flushRecordsWithSize:(NSUInteger)size repeatCount:(NSInteger)repeatCount completion:(void(^)(void))completion {
     // 防止在数据量过大时, 递归 flush, 导致堆栈溢出崩溃; 因此需要限制递归次数
     if (repeatCount <= 0) {
+        if (completion) {
+            completion();
+        }
         return;
     }
     // 从数据库中查询数据
     NSArray<SAEventRecord *> *records = [self.eventStore selectRecords:size];
     if (records.count == 0) {
+        if (completion) {
+            completion();
+        }
         return;
     }
 
-    // 尝试加密
+    // 尝试加密，筛选加密数据
     NSArray<SAEventRecord *> *encryptRecords = [self encryptEventRecords:records];
 
     // 获取查询到的数据的 id
@@ -156,11 +169,14 @@ static NSInteger kSAFlushMaxRepeatCount = 100;
         void(^block)(void) = ^ {
             if (!success) {
                 [strongSelf.eventStore updateRecords:recordIDs status:SAEventRecordStatusNone];
+                if (completion) {
+                    completion();
+                }
                 return;
             }
             // 5. 删除数据
             if ([strongSelf.eventStore deleteRecords:recordIDs]) {
-                [strongSelf flushRecordsWithSize:size repeatCount:repeatCount - 1];
+                [strongSelf flushRecordsWithSize:size repeatCount:repeatCount - 1 completion:completion];
             }
         };
         if (sensorsdata_is_same_queue(strongSelf.queue)) {

@@ -59,6 +59,9 @@ NSString * const kSAEventNameAppViewScreen = @"$AppViewScreen";
 NSString * const kSAEventNameAppViewScreenDuration = @"$AppViewScreenDuration";
 // App 元素点击
 NSString * const kSAEventNameAppClick = @"$AppClick";
+// web 元素点击
+NSString * const kSAEventNameWebClick = @"$WebClick";
+
 // 自动追踪相关事件及属性
 NSString * const kSAEventNameAppStartPassively = @"$AppStartPassively";
 
@@ -68,13 +71,9 @@ NSString * const kSAEventNameAppCrashed = @"AppCrashed";
 // 远程控制配置变化
 NSString * const kSAEventNameAppRemoteConfigChanged = @"$AppRemoteConfigChanged";
 
-// 激活事件
-NSString * const kSAEventNameAppInstall = @"$AppInstall";
-
 #pragma mark - app install property
 NSString * const SA_EVENT_PROPERTY_APP_INSTALL_SOURCE = @"$ios_install_source";
 NSString * const SA_EVENT_PROPERTY_APP_INSTALL_DISABLE_CALLBACK = @"$ios_install_disable_callback";
-NSString * const SA_EVENT_PROPERTY_APP_USER_AGENT = @"$user_agent";
 NSString * const SA_EVENT_PROPERTY_APP_INSTALL_FIRST_VISIT_TIME = @"$first_visit_time";
 #pragma mark - autoTrack property
 // App 浏览页面 Url
@@ -93,8 +92,6 @@ NSString * const kSAEeventPropertyReferrerTitle = @"$referrer_title";
 NSString * const kSAEventPropertyElementPath = @"$element_path";
 NSString * const kSAEventPropertyElementContent = @"$element_content";
 NSString * const kSAEventPropertyElementType = @"$element_type";
-NSString * const SA_EVENT_PROPERTY_CHANNEL_INFO = @"$channel_device_info";
-NSString * const SA_EVENT_PROPERTY_CHANNEL_CALLBACK_EVENT = @"$is_channel_callback_event";
 // 远程控制配置信息
 NSString * const kSAEventPropertyAppRemoteConfig = @"$app_remote_config";
 
@@ -103,7 +100,7 @@ NSString * const kSAEventCommonOptionalPropertyProject = @"$project";
 NSString * const kSAEventCommonOptionalPropertyToken = @"$token";
 NSString * const kSAEventCommonOptionalPropertyTime = @"$time";
 //神策成立时间，2015-05-15 10:24:00.000，某些时间戳判断（毫秒）
-long long const kSAEventCommonOptionalPropertyTimeInt = 1431656640000;
+int64_t const kSAEventCommonOptionalPropertyTimeInt = 1431656640000;
 
 #pragma mark--lib method
 NSString * const kSALibMethodAuto = @"autoTrack";
@@ -144,9 +141,6 @@ void sensorsdata_dispatch_safe_sync(dispatch_queue_t queue,DISPATCH_NOESCAPE dis
     }
 }
 
-#pragma mark - Scheme Host
-NSString * const kSASchemeHostRemoteConfig = @"sensorsdataremoteconfig";
-
 #pragma mark - SF related notifications
 NSNotificationName const SA_TRACK_EVENT_NOTIFICATION = @"SensorsAnalyticsTrackEventNotification";
 NSNotificationName const SA_TRACK_LOGIN_NOTIFICATION = @"SensorsAnalyticsTrackLoginNotification";
@@ -166,3 +160,9 @@ NSNotificationName const SA_REMOTE_CONFIG_MODEL_CHANGED_NOTIFICATION = @"cn.sens
 
 // App 内嵌 H5 接收可视化相关 H5 页面元素信息
 NSNotificationName const SA_VISUALIZED_H5_MESSAGE_NOTIFICATION = @"SensorsAnalyticsVisualizedMessageFromH5Notification";
+
+//page leave
+NSString * const kSAPageLeaveTimestamp = @"timestamp";
+NSString * const kSAPageLeaveAutoTrackProperties = @"properties";
+NSString * const kSAEventDurationProperty = @"event_duration";
+NSString * const kSAEventNameAppPageLeave = @"$AppPageLeave";

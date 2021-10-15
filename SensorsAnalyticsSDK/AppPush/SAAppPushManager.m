@@ -27,6 +27,8 @@
 #import "SASwizzle.h"
 #import "SALog.h"
 #import "UIApplication+PushClick.h"
+#import "SensorsAnalyticsSDK+Private.h"
+#import "SAMethodHelper.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 #import "SAUNUserNotificationCenterDelegateProxy.h"
@@ -41,11 +43,16 @@
     }
 }
 
-- (void)setLaunchOptions:(NSDictionary *)launchOptions {
-    [UIApplication sharedApplication].sensorsdata_launchOptions = launchOptions;
+- (void)setConfigOptions:(SAConfigOptions *)configOptions {
+    _configOptions = configOptions;
+
+    [UIApplication sharedApplication].sensorsdata_launchOptions = configOptions.launchOptions;
 }
 
 - (void)proxyNotifications {
+    //处理未实现代理方法也能采集事件的逻辑
+    [SAMethodHelper swizzleRespondsToSelector];
+    
     //UIApplicationDelegate proxy
     [SAApplicationDelegateProxy resolveOptionalSelectorsForDelegate:[UIApplication sharedApplication].delegate];
     [SAApplicationDelegateProxy proxyDelegate:[UIApplication sharedApplication].delegate selectors:[NSSet setWithArray:@[@"application:didReceiveLocalNotification:", @"application:didReceiveRemoteNotification:fetchCompletionHandler:"]]];
