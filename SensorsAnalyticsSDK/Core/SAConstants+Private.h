@@ -57,6 +57,8 @@ extern NSString * const kSAEventNameAppViewScreenDuration;
 
 // App 元素点击
 extern NSString * const kSAEventNameAppClick;
+/// Web 元素点击
+extern NSString * const kSAEventNameWebClick;
 // 自动追踪相关事件及属性
 extern NSString * const kSAEventNameAppStartPassively;
 
@@ -66,13 +68,9 @@ extern NSString * const kSAEventNameAppCrashed;
 
 extern NSString * const kSAEventNameAppRemoteConfigChanged;
 
-// 激活事件
-extern NSString * const kSAEventNameAppInstall;
-
 #pragma mark--app install property
 extern NSString * const SA_EVENT_PROPERTY_APP_INSTALL_SOURCE;
 extern NSString * const SA_EVENT_PROPERTY_APP_INSTALL_DISABLE_CALLBACK;
-extern NSString * const SA_EVENT_PROPERTY_APP_USER_AGENT;
 extern NSString * const SA_EVENT_PROPERTY_APP_INSTALL_FIRST_VISIT_TIME;
 
 #pragma mark--autoTrack property
@@ -88,9 +86,6 @@ extern NSString * const kSAEventPropertyElementSelector;
 extern NSString * const kSAEventPropertyElementPath;
 extern NSString * const kSAEventPropertyElementContent;
 extern NSString * const kSAEventPropertyElementType;
-extern NSString * const SA_EVENT_PROPERTY_CHANNEL_INFO;
-extern NSString * const SA_EVENT_PROPERTY_CHANNEL_CALLBACK_EVENT;
-
 extern NSString * const kSAEeventPropertyReferrerTitle;
 
 // 远程控制配置信息
@@ -101,7 +96,7 @@ extern NSString * const kSAEventPropertyAppRemoteConfig;
 extern NSString * const kSAEventCommonOptionalPropertyProject;
 extern NSString * const kSAEventCommonOptionalPropertyToken;
 extern NSString * const kSAEventCommonOptionalPropertyTime;
-extern long long const kSAEventCommonOptionalPropertyTimeInt;
+extern int64_t const kSAEventCommonOptionalPropertyTimeInt;
 
 #pragma mark--lib method
 extern NSString * const kSALibMethodAuto;
@@ -134,9 +129,6 @@ BOOL sensorsdata_is_same_queue(dispatch_queue_t queue);
 
 void sensorsdata_dispatch_safe_sync(dispatch_queue_t queue,DISPATCH_NOESCAPE dispatch_block_t block);
 
-#pragma mark - Scheme Host
-extern NSString * const kSASchemeHostRemoteConfig;
-
 #pragma mark - SF related notifications
 extern NSNotificationName const SA_TRACK_EVENT_NOTIFICATION;
 extern NSNotificationName const SA_TRACK_LOGIN_NOTIFICATION;
@@ -156,3 +148,10 @@ extern NSNotificationName const SA_H5_MESSAGE_NOTIFICATION;
 extern NSNotificationName const SA_REMOTE_CONFIG_MODEL_CHANGED_NOTIFICATION;
 
 extern NSNotificationName const SA_VISUALIZED_H5_MESSAGE_NOTIFICATION;
+
+
+//page leave
+extern NSString * const kSAPageLeaveTimestamp;
+extern NSString * const kSAPageLeaveAutoTrackProperties;
+extern NSString * const kSAEventDurationProperty;
+extern NSString * const kSAEventNameAppPageLeave;

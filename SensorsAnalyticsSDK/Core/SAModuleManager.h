@@ -19,20 +19,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "SAModuleProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, SAModuleType) {
     SAModuleTypeLocation,
-    SAModuleTypeChannelMatch,
     SAModuleTypeVisualized,
-    SAModuleTypeEncrypt,
     SAModuleTypeDeviceOrientation,
     SAModuleTypeReactNative,
     SAModuleTypeAppPush,
     SAModuleTypeAutoTrack,
+    SAModuleTypeJavaScriptBridge,
+    SAModuleTypeRemoteConfig,
+    SAModuleTypeException,
 };
 
 @interface SAModuleManager : NSObject <SAOpenURLProtocol>
@@ -40,6 +40,11 @@ typedef NS_ENUM(NSUInteger, SAModuleType) {
 + (void)startWithConfigOptions:(SAConfigOptions *)configOptions debugMode:(SensorsAnalyticsDebugMode)debugMode;
 
 + (instancetype)sharedInstance;
+
+- (BOOL)isDisableSDK;
+
+/// 关闭所有的模块功能
+- (void)disableAllModules;
 
 /// 当前 SDK 中是否包含特定类型的模块
 /// @param type 需要判断的模块类型
@@ -56,6 +61,9 @@ typedef NS_ENUM(NSUInteger, SAModuleType) {
 /// @param type 模块类型
 - (void)setEnable:(BOOL)enable forModuleType:(SAModuleType)type;
 
+/// 更新数据接收地址
+/// @param serverURL 新的数据接收地址
+- (void)updateServerURL:(NSString *)serverURL;
 @end
 
 #pragma mark -
@@ -72,12 +80,6 @@ typedef NS_ENUM(NSUInteger, SAModuleType) {
 @end
 
 #pragma mark -
-@interface SAModuleManager (Visualized) <SAVisualizedModuleProtocol>
-
-/// 是否正在连接
-@property (nonatomic, assign, readonly, getter=isConnecting) BOOL connecting;
-
-@end
 
 @interface SAModuleManager (DebugMode) <SADebugModeModuleProtocol>
 
@@ -92,12 +94,6 @@ typedef NS_ENUM(NSUInteger, SAModuleType) {
 
 #pragma mark -
 
-@interface SAModuleManager (PushClick) <SAAppPushModuleProtocol>
-
-@end
-
-#pragma mark -
-
 @interface SAModuleManager (Deeplink) <SADeeplinkModuleProtocol>
 
 @end
@@ -105,6 +101,22 @@ typedef NS_ENUM(NSUInteger, SAModuleType) {
 #pragma mark -
 
 @interface SAModuleManager (AutoTrack) <SAAutoTrackModuleProtocol>
+
+@end
+
+#pragma mark -
+
+@interface SAModuleManager (Visualized) <SAVisualizedModuleProtocol>
+
+@end
+
+#pragma mark -
+
+@interface SAModuleManager (JavaScriptBridge) <SAJavaScriptBridgeModuleProtocol>
+
+@end
+
+@interface SAModuleManager (RemoteConfig) <SARemoteConfigModuleProtocol>
 
 @end
 

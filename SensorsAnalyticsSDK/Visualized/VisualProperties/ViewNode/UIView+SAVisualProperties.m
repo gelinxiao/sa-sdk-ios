@@ -77,6 +77,10 @@ static void *const kSAViewNodePropertyName = (void *)&kSAViewNodePropertyName;
 }
 
 - (SAViewNode *)sensorsdata_viewNode {
+    // 自定义属性被关闭，就不再操作 viewNode
+    if (!SAVisualizedManager.sharedInstance.visualPropertiesTracker) {
+        return nil;
+    }
     return objc_getAssociatedObject(self, kSAViewNodePropertyName);
 }
 
@@ -140,6 +144,9 @@ static void *const kSAViewNodePropertyName = (void *)&kSAViewNodePropertyName;
 
     // 当前已经是选中状态，即未切换 tab 修改页面，不需更新
     if (!isSwitchTab) {
+        return;
+    }
+    if (!SAVisualizedManager.sharedInstance.visualPropertiesTracker) {
         return;
     }
 

@@ -57,8 +57,13 @@
 }
 
 - (BOOL)enableEncrypt {
+#if TARGET_OS_IOS
     return [SensorsAnalyticsSDK sdkInstance].configOptions.enableEncrypt;
+#else
+    return NO;
+#endif
 }
+
 
 - (NSString *)cookie {
     return [[SensorsAnalyticsSDK sdkInstance].network cookieWithDecoded:NO];
@@ -76,7 +81,7 @@
 }
 
 - (SensorsAnalyticsNetworkType)networkTypePolicy {
-    return [[SensorsAnalyticsSDK.sdkInstance valueForKey:@"networkTypePolicy"] integerValue];
+    return SensorsAnalyticsSDK.sdkInstance.configOptions.flushNetworkPolicy;
 }
 
 - (NSInteger)flushBulkSize {

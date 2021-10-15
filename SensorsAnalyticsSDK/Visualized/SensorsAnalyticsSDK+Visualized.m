@@ -24,6 +24,7 @@
 
 #import "SensorsAnalyticsSDK+Visualized.h"
 #import "SensorsAnalyticsSDK+Private.h"
+#import "SAVisualizedManager.h"
 #import "SAModuleManager.h"
 
 @implementation SensorsAnalyticsSDK (Visualized)
@@ -34,11 +35,11 @@
 }
 
 - (void)addVisualizedAutoTrackViewControllers:(NSArray<NSString *> *)controllers {
-    [[SAModuleManager sharedInstance] addVisualizeWithViewControllers:controllers];
+    [[SAVisualizedManager sharedInstance] addVisualizeWithViewControllers:controllers];
 }
 
 - (BOOL)isVisualizedAutoTrackViewController:(UIViewController *)viewController {
-    return [[SAModuleManager sharedInstance] isVisualizeWithViewController:viewController];
+    return [[SAVisualizedManager sharedInstance] isVisualizeWithViewController:viewController];
 }
 
 - (void)enableVisualizedAutoTrack {
@@ -52,11 +53,11 @@
 }
 
 - (void)addHeatMapViewControllers:(NSArray<NSString *> *)controllers {
-    [[SAModuleManager sharedInstance] addVisualizeWithViewControllers:controllers];
+    [[SAVisualizedManager sharedInstance] addVisualizeWithViewControllers:controllers];
 }
 
 - (BOOL)isHeatMapViewController:(UIViewController *)viewController {
-    return [[SAModuleManager sharedInstance] isVisualizeWithViewController:viewController];
+    return [[SAVisualizedManager sharedInstance] isVisualizeWithViewController:viewController];
 }
 
 - (void)enableHeatMap {

@@ -19,13 +19,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "SAConfigOptions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class SASecretKey;
 @class SAConfigOptions;
+@class SABaseEventObject;
 
 @protocol SAModuleProtocol <NSObject>
 
@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 @property (nonatomic, strong) SAConfigOptions *configOptions;
+
+- (void)updateServerURL:(NSString *)serverURL;
 
 @end
 
@@ -71,34 +73,24 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)trackAppInstall:(NSString *)event properties:(NSDictionary *)properties disableCallback:(BOOL)disableCallback;
 
+/// 调用 track 接口并附加渠道信息
+///
+/// 注意：这个方法需要在 serialQueue 中调用，保证线程安全
+///
+/// @param obj 事件对象
+/// @param properties 事件属性
+- (void)trackChannelWithEventObject:(SABaseEventObject *)obj properties:(nullable NSDictionary *)properties;
+
+/// 获取事件的渠道信息
+///
+/// 注意：这个方法需要在 serialQueue 中调用，保证线程安全
+///
+/// @param event 事件名
+- (NSDictionary *)channelInfoWithEvent:(NSString *)event;
+
 @end
 
 #pragma mark -
-@protocol SAVisualizedModuleProtocol <NSObject>
-
-/// 是否正在连接
-@property (nonatomic, assign, readonly, getter=isConnecting) BOOL connecting;
-
-/// 元素相关属性
-/// @param view 需要采集的 view
-- (nullable NSDictionary *)propertiesWithView:(UIView *)view;
-
-/// 指定页面开启可视化
-/// @param controllers  需要开启可视化 ViewController 的类名
-- (void)addVisualizeWithViewControllers:(NSArray<NSString *> *)controllers;
-
-/// 判断某个页面是否开启可视化
-/// @param viewController 当前页面 viewController
-- (BOOL)isVisualizeWithViewController:(UIViewController *)viewController;
-
-#pragma mark visualProperties
-
-/// 采集元素自定义属性
-/// @param view 触发事件的元素
-/// @param completionHandler 采集完成回调
-- (void)visualPropertiesWithView:(UIView *)view completionHandler:(void (^)(NSDictionary *_Nullable visualProperties))completionHandler;
-
-@end
 
 @protocol SADebugModeModuleProtocol <NSObject>
 
@@ -136,12 +128,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol SAAppPushModuleProtocol <NSObject>
-
-- (void)setLaunchOptions:(NSDictionary *)launchOptions;
-
-@end
-
 #pragma mark -
 
 @protocol SADeeplinkModuleProtocol <NSObject>
@@ -162,6 +148,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清除本次 DeepLink 解析到的 utm 信息
 - (void)clearUtmProperties;
 
+/// 触发 $AppDeepLinkLaunch 事件
+/// @param url 唤起 App 的 DeepLink url
+- (void)trackDeepLinkLaunchWithURL:(NSString *)url;
+
 @end
 
 #pragma mark -
@@ -170,6 +160,49 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 触发 App 崩溃时的退出事件
 - (void)trackAppEndWhenCrashed;
+- (void)trackPageLeaveWhenCrashed;
+
+@end
+
+@protocol SAVisualizedModuleProtocol <NSObject>
+
+/// 元素相关属性
+/// @param view 需要采集的 view
+- (nullable NSDictionary *)propertiesWithView:(id)view;
+
+#pragma mark visualProperties
+
+/// 采集元素自定义属性
+/// @param view 触发事件的元素
+/// @param completionHandler 采集完成回调
+- (void)visualPropertiesWithView:(id)view completionHandler:(void (^)(NSDictionary *_Nullable visualProperties))completionHandler;
+
+/// 根据配置，采集属性
+/// @param propertyConfigs 自定义属性配置
+/// @param completionHandler 采集完成回调
+- (void)queryVisualPropertiesWithConfigs:(NSArray <NSDictionary *>*)propertyConfigs completionHandler:(void (^)(NSDictionary *_Nullable properties))completionHandler;
+
+@end
+
+#pragma mark -
+
+@protocol SAJavaScriptBridgeModuleProtocol <NSObject>
+
+- (nullable NSString *)javaScriptSource;
+@end
+
+@protocol SARemoteConfigModuleProtocol <NSObject>
+
+/// 重试远程配置请求
+/// @param isForceUpdate 是否强制请求最新的远程配置
+- (void)retryRequestRemoteConfigWithForceUpdateFlag:(BOOL)isForceUpdate;
+
+/// 事件对象是否被远程控制忽略
+/// @param obj 事件对象
+- (BOOL)isIgnoreEventObject:(SABaseEventObject *)obj;
+
+/// 是否禁用 SDK
+- (BOOL)isDisableSDK;
 
 @end
 

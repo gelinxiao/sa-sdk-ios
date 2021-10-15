@@ -84,6 +84,14 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
             return content;
         }
     }
+
+    if ([self isKindOfClass:NSClassFromString(@"WXView")]) { // WEEX 元素，http://doc.weex.io/zh/docs/components/a.html
+        NSString *content = [self.accessibilityValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (content.length > 0) {
+            return content;
+        }
+    }
+
     if ([[self nextResponder] isKindOfClass:UITextField.class] && ![self isKindOfClass:UIButton.class]) {
         /* 兼容输入框的元素采集
          UITextField 本身是一个容器，包括 UITextField 的元素内容，文字是直接渲染到 view 的
@@ -127,11 +135,11 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
 }
 
 - (NSString *)sensorsdata_elementPosition {
-    UIView *superview = self.superview;
-    if (superview && superview.sensorsdata_elementPosition) {
-        return superview.sensorsdata_elementPosition;
+    UIView *superView = self.superview;
+    if (!superView) {
+        return nil;
     }
-    return nil;
+    return superView.sensorsdata_elementPosition;
 }
 
 - (NSString *)sensorsdata_elementId {
@@ -168,7 +176,6 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
     return super.sensorsdata_elementContent;
 }
 
-#ifndef SENSORS_ANALYTICS_DISABLE_PRIVATE_APIS
 - (NSString *)sensorsdata_elementPosition {
     if ([NSStringFromClass(self.class) isEqualToString:@"UISegment"]) {
         NSInteger index = [SAAutoTrackUtils itemIndexForResponder:self];
@@ -176,7 +183,6 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
     }
     return [super sensorsdata_elementPosition];
 }
-#endif
 
 @end
 
@@ -213,7 +219,6 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
 
 @implementation UIControl (AutoTrack)
 
-#ifndef SENSORS_ANALYTICS_DISABLE_PRIVATE_APIS
 - (BOOL)sensorsdata_isIgnored {
     // 忽略 UITabBarItem
     BOOL ignoredUITabBarItem = [[SensorsAnalyticsSDK sdkInstance] isViewTypeIgnored:UITabBarItem.class] && [NSStringFromClass(self.class) isEqualToString:@"UITabBarButton"];
@@ -250,7 +255,6 @@ static void *const kSALastAppClickIntervalPropertyName = (void *)&kSALastAppClic
 
     return super.sensorsdata_elementPosition;
 }
-#endif
 
 @end
 

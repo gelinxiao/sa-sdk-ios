@@ -29,6 +29,7 @@
 #import "SAObject+SAConfigOptions.h"
 #import "SANetwork.h"
 #import "SALog.h"
+#import "SAJSONUtil.h"
 
 @interface SAEventFlush ()
 
@@ -51,10 +52,9 @@
 - (NSString *)buildFlushJSONStringWithEventRecords:(NSArray<SAEventRecord *> *)records {
     NSMutableArray *contents = [NSMutableArray arrayWithCapacity:records.count];
     for (SAEventRecord *record in records) {
-        if ([record isValid]) {
-            // 需要先添加 flush time，再进行 json 拼接
-            [record addFlushTime];
-            [contents addObject:record.content];
+        NSString *flushContent = [record flushContent];
+        if (flushContent) {
+            [contents addObject:flushContent];
         }
     }
     return [NSString stringWithFormat:@"[%@]", [contents componentsJoinedByString:@","]];
@@ -142,14 +142,8 @@
                 }
             }
 
-            SALogDebug(@"==========================================================================");
-            @try {
-                NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
-                SALogDebug(@"%@ %@: %@", self, messageDesc, dict);
-            } @catch (NSException *exception) {
-                SALogError(@"%@: %@", self, exception);
-            }
+            NSDictionary *dict = [SAJSONUtil JSONObjectWithString:jsonString];
+            SALogDebug(@"%@ %@: %@", self, messageDesc, dict);
 
             if (statusCode != 200) {
                 SALogError(@"%@ ret_code: %ld, ret_content: %@", self, statusCode, urlResponseContent);
